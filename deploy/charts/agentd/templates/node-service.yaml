@@ -1,0 +1,19 @@
+{{- if .Values.node.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "agentd.nodeName" . }}
+  labels:
+    {{- include "agentd.labels" . | nindent 4 }}
+    app.kubernetes.io/component: node
+spec:
+  type: {{ .Values.node.service.type }}
+  selector:
+    {{- include "agentd.selectorLabels" . | nindent 4 }}
+    app.kubernetes.io/component: node
+  ports:
+    - name: grpc
+      port: {{ .Values.node.service.port }}
+      targetPort: grpc
+      protocol: TCP
+{{- end }}

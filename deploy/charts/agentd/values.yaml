@@ -1,0 +1,84 @@
+nameOverride: ""
+fullnameOverride: ""
+
+image:
+  repository: ghcr.io/example/agentd
+  tag: ""
+  pullPolicy: IfNotPresent
+imagePullSecrets: []
+
+temporal:
+  address: temporal-frontend:7233
+  namespace: default
+  taskQueue: agentd
+
+database:
+  url: ""
+
+redis:
+  url: ""
+
+registry:
+  source: ""
+
+artifacts:
+  dir: /var/lib/agentd/artifacts
+
+api:
+  enabled: true
+  replicaCount: 1
+  command:
+    - /app/agentd-api
+  args: []
+  service:
+    type: ClusterIP
+    port: 8080
+  ingress:
+    enabled: false
+    className: ""
+    annotations: {}
+    hosts:
+      - host: agentd.local
+        paths:
+          - path: /
+            pathType: Prefix
+    tls: []
+  podAnnotations: {}
+  podLabels: {}
+  resources: {}
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+
+worker:
+  enabled: true
+  replicaCount: 1
+  command:
+    - /app/agentd-worker
+  args: []
+  podAnnotations: {}
+  podLabels: {}
+  resources: {}
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+
+node:
+  enabled: true
+  replicaCount: 1
+  command:
+    - /app/agentd-node
+  args: []
+  nodeID: node-1
+  listenAddr: :9091
+  rootDir: /var/lib/agentd/node
+  endpointsOverride: ""
+  service:
+    type: ClusterIP
+    port: 9091
+  podAnnotations: {}
+  podLabels: {}
+  resources: {}
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}

@@ -1,0 +1,81 @@
+{{- if .Values.node.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "agentd.nodeName" . }}
+  labels:
+    {{- include "agentd.labels" . | nindent 4 }}
+    app.kubernetes.io/component: node
+spec:
+  replicas: {{ .Values.node.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "agentd.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/component: node
+  template:
+    metadata:
+      labels:
+        {{- include "agentd.selectorLabels" . | nindent 8 }}
+        app.kubernetes.io/component: node
+        {{- with .Values.node.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+      {{- with .Values.node.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+        - name: node
+          image: {{ include "agentd.image" . }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          {{- with .Values.node.command }}
+          command:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.node.args }}
+          args:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          env:
+            - name: AGENTD_NODE_ID
+              value: {{ .Values.node.nodeID | quote }}
+            - name: AGENTD_NODE_LISTEN
+              value: {{ .Values.node.listenAddr | quote }}
+            - name: AGENTD_NODE_ROOT
+              value: {{ .Values.node.rootDir | quote }}
+          ports:
+            - name: grpc
+              containerPort: {{ .Values.node.service.port }}
+              protocol: TCP
+          readinessProbe:
+            tcpSocket:
+              port: grpc
+          livenessProbe:
+            tcpSocket:
+              port: grpc
+          resources:
+            {{- toYaml .Values.node.resources | nindent 12 }}
+          volumeMounts:
+            - name: node-root
+              mountPath: {{ .Values.node.rootDir }}
+      volumes:
+        - name: node-root
+          emptyDir: {}
+      {{- with .Values.node.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.node.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.node.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+{{- end }}

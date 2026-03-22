@@ -1,0 +1,59 @@
+{
+  "agents": [
+    {
+      "id": "echo-binary",
+      "version": "1.0.0",
+      "name": "Echo Agent",
+      "description": "Local binary example ACP agent",
+      "platforms": ["linux-x86-64", "linux-arm64"],
+      "protocol": {
+        "version_range": "2025-10",
+        "capabilities": ["session/new", "session/load", "session/prompt", "session/cancel", "session/list"],
+        "auth_modes": ["agent"]
+      },
+      "distribution": {
+        "type": "binary",
+        "binary": {
+          "url": "https://example.invalid/echo-agent",
+          "executable": "/app/echo-agent"
+        }
+      }
+    },
+    {
+      "id": "echo-npx",
+      "version": "1.0.0",
+      "name": "Echo NPX Agent",
+      "description": "Package-managed ACP agent",
+      "protocol": {
+        "version_range": "2025-10",
+        "capabilities": ["session/new", "session/prompt", "session/cancel"],
+        "auth_modes": ["agent"]
+      },
+      "distribution": {
+        "type": "npx",
+        "npx": {
+          "package": "@acp/example-agent",
+          "version": "1.0.0"
+        }
+      }
+    },
+    {
+      "id": "echo-uvx",
+      "version": "1.0.0",
+      "name": "Echo UVX Agent",
+      "description": "Python package-managed ACP agent",
+      "protocol": {
+        "version_range": "2025-10",
+        "capabilities": ["session/new", "session/prompt", "session/cancel"],
+        "auth_modes": ["agent"]
+      },
+      "distribution": {
+        "type": "uvx",
+        "uvx": {
+          "package": "acp-example-agent",
+          "version": "1.0.0"
+        }
+      }
+    }
+  ]
+}

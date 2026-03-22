@@ -1,0 +1,16 @@
+{{- if include "agentd.controlPlaneEnabled" . }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "agentd.controlPlaneEnvName" . }}
+  labels:
+    {{- include "agentd.labels" . | nindent 4 }}
+data:
+  TEMPORAL_ADDR: {{ .Values.temporal.address | quote }}
+  TEMPORAL_NAMESPACE: {{ .Values.temporal.namespace | quote }}
+  TEMPORAL_TASK_QUEUE: {{ .Values.temporal.taskQueue | quote }}
+  AGENTD_HTTP_ADDR: {{ printf ":%d" (int .Values.api.service.port) | quote }}
+  AGENTD_NODE_ENDPOINTS: {{ required "set node.endpointsOverride or enable the node component" (include "agentd.nodeEndpoints" .) | quote }}
+  AGENTD_REGISTRY_SOURCE: {{ .Values.registry.source | quote }}
+  AGENTD_ARTIFACT_DIR: {{ .Values.artifacts.dir | quote }}
+{{- end }}

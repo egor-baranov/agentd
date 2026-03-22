@@ -1,0 +1,26 @@
+{{- if .Values.api.enabled }}
+1. Get the API service endpoint:
+{{- if eq .Values.api.service.type "LoadBalancer" }}
+  kubectl get svc --namespace {{ .Release.Namespace }} {{ include "agentd.apiName" . }} -w
+{{- else }}
+  kubectl port-forward --namespace {{ .Release.Namespace }} svc/{{ include "agentd.apiName" . }} 8080:{{ .Values.api.service.port }}
+{{- end }}
+
+2. The control plane uses:
+  TEMPORAL_ADDR={{ .Values.temporal.address }}
+  TEMPORAL_NAMESPACE={{ .Values.temporal.namespace }}
+  TEMPORAL_TASK_QUEUE={{ .Values.temporal.taskQueue }}
+  AGENTD_NODE_ENDPOINTS={{ include "agentd.nodeEndpoints" . }}
+{{- if not .Values.database.url }}
+
+3. DATABASE_URL is empty, so API and worker will each use isolated in-memory metadata stores.
+   Set database.url for a real multi-pod deployment.
+{{- end }}
+{{- if not .Values.redis.url }}
+
+4. REDIS_URL is empty, so API and worker will each use isolated in-memory brokers.
+   Set redis.url for real SSE fanout across pods.
+{{- end }}
+{{- else }}
+1. API is disabled in this release. Enable api.enabled to expose the northbound service.
+{{- end }}
