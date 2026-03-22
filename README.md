@@ -262,6 +262,11 @@ If you skip Postgres or Redis, the in-memory fallbacks still work, but only insi
 
 A Helm chart lives in [`deploy/charts/agentd/`](/deploy/charts/agentd).
 
+The repo also includes a GHCR image workflow in [`.github/workflows/container.yml`](/.github/workflows/container.yml). It builds the multi-binary `agentd` image from [`Dockerfile`](/Dockerfile) and publishes:
+
+- `ghcr.io/<owner>/agentd:sha-<commit>`
+- `ghcr.io/<owner>/agentd:latest` on the default branch
+
 Render it locally:
 
 ```bash
