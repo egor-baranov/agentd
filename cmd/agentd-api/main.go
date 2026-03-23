@@ -7,7 +7,7 @@ import (
 	"time"
 
 	"agentd/api"
-	"agentd/obs"
+	"agentd/observer"
 	"agentd/registry"
 	runtimeclient "agentd/runtime"
 	"agentd/scheduler"
@@ -19,8 +19,8 @@ import (
 
 func main() {
 	ctx := context.Background()
-	logger := obs.NewLogger("agentd-api")
-	metrics := obs.NewMetrics()
+	logger := observer.NewLogger("agentd-api")
+	metrics := observer.NewMetrics()
 	meta, err := store.Open(ctx, os.Getenv("DATABASE_URL"), getenv("AGENTD_ARTIFACT_DIR", "./var/artifacts"))
 	if err != nil {
 		logger.Error("open store", "error", err)
