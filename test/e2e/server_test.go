@@ -10,7 +10,7 @@ import (
 
 	"agentd/api"
 	"agentd/control"
-	"agentd/obs"
+	"agentd/observer"
 	"agentd/store"
 )
 
@@ -25,7 +25,7 @@ func TestServerHealthAndRegistryList(t *testing.T) {
 	}
 
 	srv := httptest.NewServer((&api.Server{
-		Metrics:  obs.NewMetrics(),
+		Metrics:  observer.NewMetrics(),
 		Registry: mem,
 	}).Handler())
 	defer srv.Close()

@@ -12,7 +12,7 @@ import (
 	"time"
 
 	"agentd/control"
-	"agentd/obs"
+	"agentd/observer"
 	"agentd/session"
 	"agentd/store"
 	"agentd/workflows"
@@ -21,7 +21,7 @@ import (
 
 type Server struct {
 	Logger     *slog.Logger
-	Metrics    *obs.Metrics
+	Metrics    *observer.Metrics
 	Temporal   workflows.Client
 	Registry   store.RegistryStore
 	Bundles    store.BundleStore

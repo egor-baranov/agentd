@@ -10,13 +10,13 @@ import (
 	"time"
 
 	"agentd/api"
-	"agentd/obs"
+	"agentd/observer"
 	"agentd/session"
 )
 
 func TestSessionEventsSSE(t *testing.T) {
 	broker := session.NewMemoryBroker()
-	srv := httptest.NewServer((&api.Server{Metrics: obs.NewMetrics(), Broker: broker}).Handler())
+	srv := httptest.NewServer((&api.Server{Metrics: observer.NewMetrics(), Broker: broker}).Handler())
 	defer srv.Close()
 
 	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)

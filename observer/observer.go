@@ -1,4 +1,4 @@
-package obs
+package observer
 
 import (
 	"log/slog"
